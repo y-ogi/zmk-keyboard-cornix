@@ -180,11 +180,16 @@ def reorder_vial_matrix(layer_rows, layout):
     rc_map = {}
     for r in range(4):
         left = layer_rows[r]
-        right = layer_rows[4 + r][::-1]  # reverse so inner -> outer
+        right = list(reversed(layer_rows[4 + r]))  # Vial stores outer->inner; reverse to inner->outer
+
+        # left: keep order (outer -> inner), drop -1 as gaps
         for c, val in enumerate(left):
             rc_map[(r, c)] = None if val == -1 else val
-        for j, val in enumerate(right):
-            rc_map[(r, 8 + j)] = None if val == -1 else val
+
+        # right: values are listed inner->outer already; drop -1 then pack from col8 outward
+        packed = [v for v in right if v != -1]
+        for j, val in enumerate(packed):
+            rc_map[(r, 8 + j)] = val
 
     ordered = []
     for key in layout:

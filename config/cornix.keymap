@@ -205,10 +205,10 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-            &kp TAB &kp Q &kp W &kp E &kp R &kp T &none &kp Y &kp U &kp I &kp O &kp P
+            &kp TAB &kp Q &kp W &kp E &kp R &kp T &kp Y &kp U &kp I &kp O &kp P &kp EQUAL
             &kp LCTRL &kp A &kp S &kp D &kp F &kp G &mkp MB3 &kp H &kp J &kp K &kp L &kp SEMI
-            &kp LSHIFT &kp Z &kp X &kp C &kp V &kp B &kp MUTE &none &none &kp N &kp M &kp COMMA &kp DOT &kp UP
-            &kp LCTRL &kp LGUI &kp LALT &mo 1 &lt 3 SPACE &kp LGUI &none &kp BACKSPACE &lt 4 ENTER &mo 2 &kp LEFT &kp DOWN
+            &kp LSHIFT &kp Z &kp X &kp C &kp V &kp B &kp MUTE &none &kp N &kp M &kp COMMA &kp DOT &kp UP &kp SLASH
+            &kp LCTRL &kp LGUI &kp LALT &mo 1 &lt 3 SPACE &kp LGUI &kp BACKSPACE &lt 4 ENTER &mo 2 &kp LEFT &kp DOWN &kp RIGHT
 >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -224,7 +224,7 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-            &kp ESCAPE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &none &kp N6 &kp N7 &kp N8 &kp N9 &kp N0
+            &kp ESCAPE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp DELETE
             &none &none &none &none &kp SEMI &kp MINUS &mkp MB3 &kp EQUAL &kp QUOTE &none &none &none
             &none &none &none &none &none &none &kp MUTE &none &none &none &none &none &none &none
             &none &none &none &none &none &none &none &none &none &none &none &none
