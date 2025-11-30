@@ -166,11 +166,16 @@ def side_of_index(idx: int, layout: List[Dict]) -> str:
     return "left" if x < 7 else "right"
 
 
-def zmk_key(token: str, idx: int, layout: List[Dict], warnings: List[str]) -> str:
+def zmk_key(
+    token: str, idx: int, layout: List[Dict], warnings: List[str], td_map=None
+) -> str:
     """
     Convert a single Vial/QMK token to ZMK binding string.
     """
     token = token.strip()
+
+    if td_map and token in td_map:
+        return td_map[token]
 
     if token in KC:
         return KC[token]
@@ -300,6 +305,8 @@ def main() -> None:
     with vial_path.open() as f:
         vial = json.load(f)
 
+    td_def = vial.get("tap_dance")
+
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
     elif isinstance(vial.get("layout"), list):
@@ -330,9 +337,33 @@ def main() -> None:
         layers = layers[: len(layer_names)]
     warnings: List[str] = []
 
+    # Tap dance mapping: TD(n) -> &lt layer key (only single tap/hold supported)
+    td_map: Dict[str, str] = {}
+    if td_def:
+        for idx, td in enumerate(td_def):
+            if not isinstance(td, list) or len(td) < 2:
+                continue
+            tap, hold = td[0], td[1]
+            dtap = td[2] if len(td) > 2 else "KC_NO"
+            dhold = td[3] if len(td) > 3 else "KC_NO"
+            if tap in ("KC_NO", "KC_TRNS"):
+                continue
+            if hold.startswith("MO(") and hold.endswith(")"):
+                layer_num = hold[3:-1]
+                tap_binding = zmk_key(tap, 0, layout, warnings, None)
+                if tap_binding.startswith("&kp "):
+                    tap_plain = tap_binding[4:]
+                    td_map[f"TD({idx})"] = f"&lt {layer_num} {tap_plain}"
+                else:
+                    td_map[f"TD({idx})"] = tap_binding
+                if dtap not in ("KC_NO", "KC_TRNS") or dhold not in ("KC_NO", "KC_TRNS"):
+                    warnings.append(f"TD({idx}) double tap/hold ignored")
+            else:
+                warnings.append(f"TD({idx}) hold '{hold}' not mapped")
+
     for idx_layer, tokens in enumerate(layers):
         bindings = [
-            zmk_key(tok, i, layout, warnings) for i, tok in enumerate(tokens)
+            zmk_key(tok, i, layout, warnings, td_map) for i, tok in enumerate(tokens)
         ]
         # Use indent from existing block if possible
         indent = "            "
