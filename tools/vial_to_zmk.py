@@ -160,24 +160,36 @@ def load_layout(variant: str) -> List[Dict]:
     return layout
 
 
-def reorder_vial_matrix(layer_rows):
+def reorder_vial_matrix(layer_rows, layout):
     """
-    Vial .vil exports store each layer as 8 rows:
-      rows 0-3 = left half (top -> bottom)
-      rows 4-7 = right half (top -> bottom) but each row is left-to-right
-    Our ZMK layout expects left rows, then right rows but right needs to be
-    reversed to go from inner to outer.
+    Map Vial's 8x7 matrix (4 rows per side) into the 14-column layout used in
+    config/cornix*.json. We place values by (row, col):
+      left  side cols 0..6  (as-is)
+      right side cols 8..13 (row list reversed so inner -> outer)
+    Any -1 becomes None (later mapped to &none).
+    Output is a flat list ordered exactly like the layout JSON (by row, then col).
     """
     if len(layer_rows) != 8:
-        # Fallback: simple row-major flatten skipping -1
-        return [k for row in layer_rows for k in row if k != -1]
+        # Fallback: row-major keeping -1 as None to preserve slots
+        out = []
+        for row in layer_rows:
+            out.extend([None if k == -1 else k for k in row])
+        return out
+
+    # Build a map (row, col) -> token/None
+    rc_map = {}
+    for r in range(4):
+        left = layer_rows[r]
+        right = layer_rows[4 + r][::-1]  # reverse so inner -> outer
+        for c, val in enumerate(left):
+            rc_map[(r, c)] = None if val == -1 else val
+        for j, val in enumerate(right):
+            rc_map[(r, 8 + j)] = None if val == -1 else val
 
     ordered = []
-    for i in range(4):
-        left = layer_rows[i]
-        right = layer_rows[4 + i][::-1]  # reverse per-row for right side
-        ordered.extend([k for k in left if k != -1])
-        ordered.extend([k for k in right if k != -1])
+    for key in layout:
+        r, c = key["row"], key["col"]
+        ordered.append(rc_map.get((r, c)))
     return ordered
 
 
@@ -193,6 +205,8 @@ def zmk_key(
     """
     Convert a single Vial/QMK token to ZMK binding string.
     """
+    if token is None:
+        return "&none"
     token = token.strip()
 
     if td_map and token in td_map:
@@ -328,18 +342,18 @@ def main() -> None:
 
     td_def = vial.get("tap_dance")
 
+    layout = load_layout(variant)
+
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
     elif isinstance(vial.get("layout"), list):
         # Vial .vil export: list of layers, each is a 2D matrix; -1 = no key
         layers = []
         for layer_rows in vial["layout"]:
-            flat = reorder_vial_matrix(layer_rows)
+            flat = reorder_vial_matrix(layer_rows, layout)
             layers.append(flat)
     else:
         sys.exit("Could not find 'layers' or 'layout' in Vial file.")
-
-    layout = load_layout(variant)
     if len(layout) != len(layers[0]):
         sys.exit(
             f"Layout length mismatch: layout has {len(layout)} keys, "
