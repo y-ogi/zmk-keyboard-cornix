@@ -160,6 +160,27 @@ def load_layout(variant: str) -> List[Dict]:
     return layout
 
 
+def reorder_vial_matrix(layer_rows):
+    """
+    Vial .vil exports store each layer as 8 rows:
+      rows 0-3 = left half (top -> bottom)
+      rows 4-7 = right half (top -> bottom) but each row is left-to-right
+    Our ZMK layout expects left rows, then right rows but right needs to be
+    reversed to go from inner to outer.
+    """
+    if len(layer_rows) != 8:
+        # Fallback: simple row-major flatten skipping -1
+        return [k for row in layer_rows for k in row if k != -1]
+
+    ordered = []
+    for i in range(4):
+        left = layer_rows[i]
+        right = layer_rows[4 + i][::-1]  # reverse per-row for right side
+        ordered.extend([k for k in left if k != -1])
+        ordered.extend([k for k in right if k != -1])
+    return ordered
+
+
 def side_of_index(idx: int, layout: List[Dict]) -> str:
     """Return 'left' or 'right' based on x coordinate."""
     x = layout[idx]["x"]
@@ -312,8 +333,8 @@ def main() -> None:
     elif isinstance(vial.get("layout"), list):
         # Vial .vil export: list of layers, each is a 2D matrix; -1 = no key
         layers = []
-        for layer in vial["layout"]:
-            flat = [k for row in layer for k in row if k != -1]
+        for layer_rows in vial["layout"]:
+            flat = reorder_vial_matrix(layer_rows)
             layers.append(flat)
     else:
         sys.exit("Could not find 'layers' or 'layout' in Vial file.")
