@@ -168,6 +168,18 @@
             layers = <0 1>;
         };
 
+        cb_lang2 {
+            bindings = <&kp LANG2>;
+            key-positions = <7 8>;
+            layers = <0>;
+        };
+
+        cb_lang1 {
+            bindings = <&kp LANG1>;
+            key-positions = <8 9>;
+            layers = <0>;
+        };
+
         layer3 {
             bindings = <&kp N3>;
             key-positions = <5 6>;
