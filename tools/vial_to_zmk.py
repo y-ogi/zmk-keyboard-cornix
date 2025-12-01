@@ -65,10 +65,10 @@ KC = {
     "KC_BSPACE": "&kp BACKSPACE",
     "KC_TAB": "&kp TAB",
     "KC_ESC": "&kp ESC",
-    "KC_ENTER": "&kp 0x28",
-    "KC_ENT": "&kp 0x28",
-    "KC_SPC": "&kp 0x2C",
-    "KC_SPACE": "&kp 0x2C",
+    "KC_ENTER": "&kp ENTER",
+    "KC_ENT": "&kp ENTER",
+    "KC_SPC": "&kp SPACE",
+    "KC_SPACE": "&kp SPACE",
     "KC_DEL": "&kp DELETE",
     "KC_INS": "&kp INS",
     "KC_HOME": "&kp HOME",
@@ -353,7 +353,7 @@ def main() -> None:
     td_def = vial.get("tap_dance")
 
     layout = load_layout(variant)
-    expected_len = 54 if variant == "54" else len(layout)
+    expected_len = 52 if variant == "54" else len(layout)
 
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
