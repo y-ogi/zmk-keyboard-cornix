@@ -90,7 +90,7 @@ KC = {
     "KC_RSFT": "&kp RSHFT",
     "KC_CAPS": "&kp CAPSLOCK",
     "KC_CAPSLOCK": "&kp CAPSLOCK",
-    "KC_MUTE": "&kp MUTE",
+    "KC_MUTE": "&kp C_MUTE",
     "KC_VOLU": "&kp C_VOL_UP",
     "KC_VOLD": "&kp C_VOL_DN",
     "RESET": "&bootloader",
@@ -127,6 +127,7 @@ KC.update(
         "KC_SCOLON": "&kp SEMI",
         "KC_COLN": "&kp COLON",
         "KC_QUOT": "&kp SQT",
+        "KC_QUOTE": "&kp SQT",
         "KC_DQUO": "&kp DQT",
         "KC_COMM": "&kp COMMA",
         "KC_DOT": "&kp DOT",
@@ -354,7 +355,7 @@ def main() -> None:
     td_def = vial.get("tap_dance")
 
     layout = load_layout(variant)
-    expected_len = len(layout)
+    expected_len = 52 if variant == "54" else len(layout)
 
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
@@ -404,8 +405,15 @@ def main() -> None:
         bindings = [
             zmk_key(tok, i, layout, warnings, td_map) for i, tok in enumerate(tokens)
         ]
+        if len(bindings) < expected_len:
+            bindings += ["&none"] * (expected_len - len(bindings))
         bindings = bindings[:expected_len]
-        layout_used = layout
+        layout_used = list(layout)
+        if len(layout_used) < expected_len:
+            max_row = max(k["row"] for k in layout_used)
+            last_col = max(k["col"] for k in layout_used if k["row"] == max_row)
+            for j in range(expected_len - len(layout_used)):
+                layout_used.append({"row": max_row, "col": last_col + 1 + j})
         # Use indent from existing block if possible
         indent = "            "
         block = format_bindings(bindings, layout_used, indent)
