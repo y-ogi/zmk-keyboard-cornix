@@ -251,7 +251,14 @@ def zmk_key(
     # Layer-tap LT(layer, KC_x)
     m = re.match(r"LT\((\d+),\s*KC_([A-Z0-9_]+)\)", token)
     if m:
-        return f"&lt {m.group(1)} {m.group(2)}"
+        key = m.group(2)
+        # explicit numeric for problematic keys
+        key_numeric = {
+            "SPACE": "0x2C",
+            "ENTER": "0x28",
+            "ENT": "0x28",
+        }.get(key)
+        return f"&lt {m.group(1)} {key_numeric or key}"
 
     # Mod-tap forms: LCTL_T(KC_A)
     m = re.match(r"(LCTL|RCTL|LALT|RALT|LGUI|RGUI|LSFT|RSFT)_T\(KC_([A-Z0-9_]+)\)", token)
@@ -383,6 +390,11 @@ def main() -> None:
 
     # Tap dance mapping: TD(n) -> &lt layer key (only single tap/hold supported)
     td_map: Dict[str, str] = {}
+    key_numeric = {
+        "SPACE": "0x2C",
+        "ENTER": "0x28",
+        "ENT": "0x28",
+    }
     if td_def:
         for idx, td in enumerate(td_def):
             if not isinstance(td, list) or len(td) < 2:
@@ -396,7 +408,9 @@ def main() -> None:
                 layer_num = hold[3:-1]
                 tap_binding = zmk_key(tap, 0, layout, warnings, None)
                 if tap_binding.startswith("&kp "):
-                    td_map[f"TD({idx})"] = f"&lt {layer_num} {tap_binding[4:]}"
+                    tap_plain = tap_binding[4:]
+                    tap_plain = key_numeric.get(tap_plain, tap_plain)
+                    td_map[f"TD({idx})"] = f"&lt {layer_num} {tap_plain}"
                 else:
                     td_map[f"TD({idx})"] = tap_binding
                 if dtap not in ("KC_NO", "KC_TRNS") or dhold not in ("KC_NO", "KC_TRNS"):
