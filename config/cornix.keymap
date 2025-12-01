@@ -177,7 +177,7 @@
 
         layer5 {
             bindings = <&mo 5>;
-            key-positions = <47 49>;
+            key-positions = <43 44>;
         };
     };
 
