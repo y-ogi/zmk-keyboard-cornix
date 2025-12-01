@@ -119,6 +119,7 @@ KC.update(
         "KC_PLUS": "&kp PLUS",
         "KC_BSLS": "&kp BSLH",
         "KC_BSLASH": "&kp BSLH",
+        "KC_SLASH": "&kp FSLH",
         "KC_SLSH": "&kp FSLH",
         "KC_SLSH": "&kp FSLH",
         "KC_SCLN": "&kp SEMI",
