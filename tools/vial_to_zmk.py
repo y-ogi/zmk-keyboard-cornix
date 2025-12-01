@@ -353,7 +353,7 @@ def main() -> None:
     td_def = vial.get("tap_dance")
 
     layout = load_layout(variant)
-    expected_len = 52 if variant == "54" else len(layout)
+    expected_len = len(layout)
 
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
@@ -403,16 +403,8 @@ def main() -> None:
         bindings = [
             zmk_key(tok, i, layout, warnings, td_map) for i, tok in enumerate(tokens)
         ]
-        if len(bindings) < expected_len:
-            bindings += ["&none"] * (expected_len - len(bindings))
         bindings = bindings[:expected_len]
         layout_used = layout
-        if len(layout_used) < expected_len:
-            # pad layout with dummy positions in last row to match bindings length
-            max_row = max(k["row"] for k in layout_used)
-            last_col = max(k["col"] for k in layout_used if k["row"] == max_row)
-            for j in range(expected_len - len(layout_used)):
-                layout_used.append({"row": max_row, "col": last_col + 1 + j})
         # Use indent from existing block if possible
         indent = "            "
         block = format_bindings(bindings, layout_used, indent)
