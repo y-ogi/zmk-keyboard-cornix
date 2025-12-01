@@ -353,7 +353,7 @@ def main() -> None:
     td_def = vial.get("tap_dance")
 
     layout = load_layout(variant)
-    expected_len = 52 if variant == "54" else len(layout)
+    expected_len = 54 if variant == "54" else len(layout)
 
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
