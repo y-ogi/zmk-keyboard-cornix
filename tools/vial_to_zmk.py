@@ -186,8 +186,12 @@ def reorder_vial_matrix(layer_rows, layout):
         for c, val in enumerate(left):
             rc_map[(r, c)] = None if val == -1 else val
 
-        # right: now inner->outer; drop gaps then pack from col8 outward
+        # right: now inner->outer; drop gaps, and if we have more keys than
+        # layout columns, trim from the inner side (front of list).
         packed = [v for v in right if v != -1]
+        num_right = sum(1 for k in layout if k["row"] == r and k["col"] >= 8)
+        while len(packed) > num_right:
+            packed.pop(0)
         for j, val in enumerate(packed):
             rc_map[(r, 8 + j)] = val
 
