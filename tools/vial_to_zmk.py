@@ -408,7 +408,7 @@ def main() -> None:
     for idx_layer, tokens in enumerate(layers):
         bindings = [
             zmk_key(tok, i, layout, warnings, td_map) for i, tok in enumerate(tokens)
-        ]
+        ][: len(layout)]  # guard: do not exceed layout size
         # Use indent from existing block if possible
         indent = "            "
         block = format_bindings(bindings, layout, indent)
