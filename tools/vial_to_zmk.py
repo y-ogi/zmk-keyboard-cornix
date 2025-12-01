@@ -353,6 +353,7 @@ def main() -> None:
     td_def = vial.get("tap_dance")
 
     layout = load_layout(variant)
+    expected_len = 52 if variant == "54" else len(layout)
 
     if "layers" in vial:
         layers: List[List[str]] = vial["layers"]
@@ -364,11 +365,7 @@ def main() -> None:
             layers.append(flat)
     else:
         sys.exit("Could not find 'layers' or 'layout' in Vial file.")
-    if len(layout) != len(layers[0]):
-        sys.exit(
-            f"Layout length mismatch: layout has {len(layout)} keys, "
-            f"Vial layer has {len(layers[0])}."
-        )
+    # Allow Vial layer length mismatch; we pad/trim later
 
     with keymap_path.open() as f:
         keymap_txt = f.read()
@@ -405,10 +402,20 @@ def main() -> None:
     for idx_layer, tokens in enumerate(layers):
         bindings = [
             zmk_key(tok, i, layout, warnings, td_map) for i, tok in enumerate(tokens)
-        ][: len(layout)]  # guard: do not exceed layout size
+        ]
+        if len(bindings) < expected_len:
+            bindings += ["&none"] * (expected_len - len(bindings))
+        bindings = bindings[:expected_len]
+        layout_used = layout
+        if len(layout_used) < expected_len:
+            # pad layout with dummy positions in last row to match bindings length
+            max_row = max(k["row"] for k in layout_used)
+            last_col = max(k["col"] for k in layout_used if k["row"] == max_row)
+            for j in range(expected_len - len(layout_used)):
+                layout_used.append({"row": max_row, "col": last_col + 1 + j})
         # Use indent from existing block if possible
         indent = "            "
-        block = format_bindings(bindings, layout, indent)
+        block = format_bindings(bindings, layout_used, indent)
         keymap_txt = replace_layer_block(
             keymap_txt, layer_names[idx_layer], block
         )
