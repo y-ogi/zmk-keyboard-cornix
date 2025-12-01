@@ -7,3 +7,6 @@ result
 target
 
 firmware
+
+# Generated/checked-out Zephyr module bindings (can be very large)
+zephyr/dts/bindings/
