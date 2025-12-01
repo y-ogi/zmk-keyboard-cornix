@@ -251,7 +251,7 @@ def zmk_key(
     # Layer-tap LT(layer, KC_x)
     m = re.match(r"LT\((\d+),\s*KC_([A-Z0-9_]+)\)", token)
     if m:
-        return f"&lt {m.group(1)} &kp {m.group(2)}"
+        return f"&lt {m.group(1)} {m.group(2)}"
 
     # Mod-tap forms: LCTL_T(KC_A)
     m = re.match(r"(LCTL|RCTL|LALT|RALT|LGUI|RGUI|LSFT|RSFT)_T\(KC_([A-Z0-9_]+)\)", token)
@@ -396,7 +396,7 @@ def main() -> None:
                 layer_num = hold[3:-1]
                 tap_binding = zmk_key(tap, 0, layout, warnings, None)
                 if tap_binding.startswith("&kp "):
-                    td_map[f"TD({idx})"] = f"&lt {layer_num} {tap_binding}"
+                    td_map[f"TD({idx})"] = f"&lt {layer_num} {tap_binding[4:]}"
                 else:
                     td_map[f"TD({idx})"] = tap_binding
                 if dtap not in ("KC_NO", "KC_TRNS") or dhold not in ("KC_NO", "KC_TRNS"):
