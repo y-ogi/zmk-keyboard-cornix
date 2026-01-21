@@ -215,10 +215,10 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-&kp ESCAPE  &kp EXCLAMATION  &kp AT_SIGN  &kp HASH  &kp DOLLAR  &kp PERCENT                     &kp CARET  &kp AMPERSAND  &kp ASTERISK      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp MINUS
-&trans      &none            &none        &none     &none       &none                           &kp PLUS   &kp EQUAL      &kp LEFT_BRACKET  &kp RIGHT_BRACKET     &kp SEMICOLON          &kp SINGLE_QUOTE
-&trans      &none            &none        &none     &none       &none        &kp C_MUTE  &none  &kp GRAVE  &none          &none             &none                 &trans                 &kp PIPE
-&trans      &none            &none        &none     &none       &none                           &none      &none          &none             &trans                &trans                 &trans
+&kp ESCAPE  &kp EXCLAMATION  &kp AT_SIGN         &kp HASH          &kp DOLLAR     &kp PERCENT                     &kp CARET  &kp AMPERSAND  &kp ASTERISK      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp MINUS
+&trans      &kp LG(SPACE)    &kp LC(LEFT_ARROW)  &kp LC(UP_ARROW)  &kp LC(RIGHT)  &none                           &kp PLUS   &kp EQUAL      &kp LEFT_BRACKET  &kp RIGHT_BRACKET     &kp SEMICOLON          &kp SINGLE_QUOTE
+&trans      &none            &none               &none             &none          &none        &kp C_MUTE  &none  &kp GRAVE  &none          &none             &none                 &trans                 &kp PIPE
+&trans      &none            &none               &none             &none          &none                           &none      &none          &none             &trans                &trans                 &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
