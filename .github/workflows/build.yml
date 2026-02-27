@@ -5,8 +5,8 @@ on:
     paths:
       - "boards/**"
       - "config/**"
-    tags-ignore:
-      - "*"
+      - ".github/workflows/**"
+      - "build.yaml"
 
 jobs:
   build:
