@@ -57,11 +57,9 @@ config BT_CTLR
     default BT
 
 # E73 module has no external 32kHz crystal, use RC oscillator
-config CLOCK_CONTROL_NRF_K32SRC_RC
-    default y
-
-config CLOCK_CONTROL_NRF_K32SRC_XTAL
-    default n
+choice CLOCK_CONTROL_NRF_K32SRC
+    default CLOCK_CONTROL_NRF_K32SRC_RC
+endchoice
 
 config BOARD_CORNIX_CHARGER
     default y
