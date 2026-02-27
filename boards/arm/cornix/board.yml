@@ -1,8 +1,6 @@
 boards:
   - name: cornix_left
     vendor: jzf
-    socs:
-      - name: nrf52840
     revision:
       format: major.minor.patch
       default: 1.0.0
@@ -10,8 +8,6 @@ boards:
         - name: 1.0.0
   - name: cornix_right
     vendor: jzf
-    socs:
-      - name: nrf52840
     revision:
       format: major.minor.patch
       default: 1.0.0
@@ -19,8 +15,6 @@ boards:
         - name: 1.0.0
   - name: cornix_ph_left
     vendor: jzf
-    socs:
-      - name: nrf52840
     revision:
       format: major.minor.patch
       default: 1.0.0
