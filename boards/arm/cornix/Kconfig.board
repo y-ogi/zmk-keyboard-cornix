@@ -6,23 +6,11 @@
 config BOARD_CORNIX_LEFT
     bool "Cornix Left"
     depends on SOC_SERIES_NRF52X
-    select SOC_NRF52840_QIAA
-    imply RETAINED_MEM
-    imply RETENTION
-    imply RETENTION_BOOT_MODE
 
 config BOARD_CORNIX_RIGHT
     bool "Cornix Right"
     depends on SOC_SERIES_NRF52X
-    select SOC_NRF52840_QIAA
-    imply RETAINED_MEM
-    imply RETENTION
-    imply RETENTION_BOOT_MODE
 
 config BOARD_CORNIX_PH_LEFT
     bool "Cornix PH Left"
     depends on SOC_SERIES_NRF52X
-    select SOC_NRF52840_QIAA
-    imply RETAINED_MEM
-    imply RETENTION
-    imply RETENTION_BOOT_MODE
