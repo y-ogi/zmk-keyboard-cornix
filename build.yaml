@@ -7,6 +7,10 @@ include:
   - board: cornix_right
     artifact-name: cornix_right
 
+  - board: cornix_left
+    shield: settings_reset
+    artifact-name: cornix_left_reset
+
   - board: cornix_right
     shield: settings_reset
-    artifact-name: cornix_reset
+    artifact-name: cornix_right_reset
