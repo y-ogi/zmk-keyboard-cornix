@@ -53,8 +53,8 @@ endif # BOARD_CORNIX_RIGHT
 if BOARD_CORNIX_LEFT  || BOARD_CORNIX_PH_LEFT || BOARD_CORNIX_RIGHT
 
 
-#config BT_CTLR
-#    default BT
+config BT_CTLR
+    default BT
 
 config BOARD_CORNIX_CHARGER
     default y
