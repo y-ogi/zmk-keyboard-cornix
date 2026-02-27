@@ -44,7 +44,4 @@ CONFIG_INPUT=y
 CONFIG_EC11=y
 CONFIG_EC11_TRIGGER_GLOBAL_THREAD=y
 
-# One-time bond clear to sync with left side (revert to n after first flash)
-CONFIG_ZMK_BLE_CLEAR_BONDS_ON_START=y
-
 # vim: set ft=kconfig:
